@@ -1,0 +1,41 @@
+{
+  "name": "@together/server",
+  "version": "1.0.0",
+  "description": "A graphql server combining microsub and micropub functionality for Together",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alltogethernow/server.git"
+  },
+  "keywords": [
+    "indieweb",
+    "graphql",
+    "microsub",
+    "micropub"
+  ],
+  "author": "grant.codes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alltogethernow/server/issues"
+  },
+  "homepage": "https://github.com/alltogethernow/server#readme",
+  "dependencies": {
+    "@postlight/mercury-parser": "^2.1.0",
+    "apollo-datasource": "^0.5.0",
+    "apollo-datasource-rest": "^0.5.0",
+    "apollo-server": "^2.6.3",
+    "dotenv": "^8.0.0",
+    "graphql": "^14.3.1",
+    "indieauth-helper": "github:grantcodes/indieauth-helper",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.11",
+    "micropub-helper": "^1.6.1",
+    "mongoose": "^5.6.0"
+  }
+}
