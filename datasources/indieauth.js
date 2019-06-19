@@ -1,5 +1,5 @@
 const { DataSource } = require('apollo-datasource')
-const auth = require('../lib/indieauth')
+const getAuth = require('../lib/indieauth')
 
 const scopes = [
   'post',
@@ -19,12 +19,14 @@ class IndieAuth extends DataSource {
   }
 
   async getAuthUrl(url) {
+    const auth = getAuth()
     auth.options.me = url
     const authUrl = await auth.getAuthUrl('code', scopes)
     return authUrl
   }
 
   async getToken(code, state) {
+    const auth = getAuth()
     const valid = auth.validateState(state)
     if (!valid) {
       console.log('State not valid')

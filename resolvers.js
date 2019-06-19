@@ -220,6 +220,9 @@ module.exports = {
     },
     login: async (_, { state, code }, { dataSources }) => {
       const loginData = await dataSources.indieauth.getToken(code, state)
+      if (!loginData) {
+        throw new Error('Error getting token')
+      }
       const token = jwt.generate(loginData.url)
       const user = await dataSources.mongo.findOrCreateUser(token, loginData)
       return { token, user }

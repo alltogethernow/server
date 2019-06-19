@@ -1,3 +1,4 @@
+const { AuthenticationError } = require('apollo-server')
 const { RESTDataSource } = require('apollo-datasource-rest')
 const { camelCase } = require('lodash')
 
@@ -52,6 +53,9 @@ class MicrosubAPI extends RESTDataSource {
    * @param {object} request The request object
    */
   willSendRequest(request) {
+    if (!this.context.user || !this.context.user.token) {
+      throw new AuthenticationError()
+    }
     request.headers.set('Authorization', 'Bearer ' + this.context.user.token)
   }
 
