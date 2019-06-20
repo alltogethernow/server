@@ -29,7 +29,7 @@ class IndieAuth extends DataSource {
     const auth = getAuth()
     const valid = auth.validateState(state)
     if (!valid) {
-      console.log('State not valid')
+      console.error('State not valid', state)
       return null
     }
     auth.options.me = valid.me
@@ -48,7 +48,7 @@ class IndieAuth extends DataSource {
       }
       return user
     } catch (err) {
-      console.log('error getting token', err)
+      console.error('[Error getting token]', err)
       return null
     }
   }
