@@ -1,11 +1,6 @@
 const { gql } = require('apollo-server')
 
 const typeDefs = gql`
-  type ChannelAndTimeline {
-    channel: Channel!
-    timeline: TimelineResult!
-  }
-
   type Follow {
     type: String!
     url: String!
@@ -134,7 +129,6 @@ const typeDefs = gql`
       before: String
       after: String
     ): TimelineResult!
-    notifications: ChannelAndTimeline!
     search(query: String!): [SearchResult]!
     preview(url: String!): [Post]!
     user: User

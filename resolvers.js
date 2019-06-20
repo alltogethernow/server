@@ -36,10 +36,9 @@ module.exports = {
       await dataSources.microsub.search(query),
     preview: async (_, { url }, { dataSources }) =>
       await dataSources.microsub.preview(url),
-    // Gets channels (removing the notifications channel)
     channels: async (_, __, { dataSources }) => {
       const channels = await dataSources.microsub.getAllChannels()
-      return channels.filter(channel => channel.uid !== 'notifications')
+      return channels
     },
     following: async (_, { channel }, { dataSources }) => {
       return await dataSources.microsub.getFollowing(channel)
@@ -52,17 +51,6 @@ module.exports = {
     },
     timeline: async (_, { channel, limit, before, after }, { dataSources }) =>
       await dataSources.microsub.getTimeline({ channel, limit, before, after }),
-    notifications: async (_, __, { dataSources }) => {
-      const channels = await dataSources.microsub.getAllChannels()
-      const channel = channels.find(channel => channel.uid === 'notifications')
-      if (!channel) {
-        return false
-      }
-      const timeline = await dataSources.microsub.getTimeline({
-        channel: 'notifications',
-      })
-      return { channel, timeline }
-    },
     micropubQuery: async (_, { query }, { dataSources }) => {
       const res = await dataSources.micropub.query(query)
       return JSON.stringify(res)
