@@ -22,6 +22,7 @@ class IndieAuth extends DataSource {
     const auth = getAuth()
     auth.options.me = url
     const authUrl = await auth.getAuthUrl('code', scopes)
+    console.log('Sending user to auth:', authUrl)
     return authUrl
   }
 
