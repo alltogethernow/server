@@ -37,6 +37,9 @@ const server = new ApolloServer({
   dataSources,
   resolvers,
   context,
+  cors: {
+    origin: process.env.URL,
+  },
   resolverValidationOptions: {
     requireResolversForResolveType: false,
   },
