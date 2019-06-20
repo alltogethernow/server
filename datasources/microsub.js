@@ -80,6 +80,13 @@ class MicrosubAPI extends RESTDataSource {
       if (channelSettings.infiniteScroll === false) {
         infiniteScroll = channelSettings.infiniteScroll
       }
+      if (channel.unread === false) {
+        channel.unread = 0
+      } else if (channel.unread === true) {
+        channel.unread = null
+      } else if (!channel.unread) {
+        channel.unread = 0
+      }
     }
     let data = {
       ...channel,
@@ -87,9 +94,6 @@ class MicrosubAPI extends RESTDataSource {
       _t_layout: layout,
       _t_autoRead: autoRead,
       _t_infiniteScroll: infiniteScroll,
-    }
-    if (data.unread === null) {
-      data.unread = -1
     }
     return data
   }
