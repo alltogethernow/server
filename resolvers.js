@@ -1,6 +1,6 @@
-const { camelCase } = require('lodash')
 const jwt = require('./lib/jwt')
 const { PubSub, withFilter } = require('apollo-server')
+const mf2Convert = require('./lib/mf2-converter')
 const pubsub = new PubSub()
 
 module.exports = {
@@ -55,48 +55,23 @@ module.exports = {
       const res = await dataSources.micropub.query(query)
       return JSON.stringify(res)
     },
-    micropubPosts: async (_, { postType }, { dataSources }) => {
-      const res = await dataSources.micropub.querySource(
-        postType ? { 'post-type': postType } : null
-      )
-      // TODO: Develop proper mf2 <-> jf2
-      const posts = res.items.map(mf2 => {
-        let jf2 = { _is_read: true }
-        const alwaysArrays = [
-          'category',
-          'featured',
-          'photo',
-          'video',
-          'audio',
-          'like-of',
-          'repost-of',
-          'in-reply-to',
-          'bookmark-of',
-          'quotation-of',
-          'syndication',
-        ]
-        jf2.type = mf2.type[0].replace('h-', '')
-        for (const key in mf2.properties) {
-          if (mf2.properties.hasOwnProperty(key)) {
-            let value = mf2.properties[key]
-            if (!alwaysArrays.includes(key)) {
-              value = value[0]
-            }
-            if (key === 'photo') {
-              value = value.map(photo => {
-                if (photo.value) {
-                  return photo.value
-                }
-                return photo
-              })
-            }
-            jf2[camelCase(key)] = value
-          }
-        }
-        return jf2
-      })
-
-      return posts
+    micropubPosts: async (_, queryParams, { dataSources }) => {
+      let query = Object.assign({}, queryParams)
+      if (query.postType) {
+        query['post-type'] = query.postType
+        delete query.postType
+      }
+      if (Object.keys(query).length === 0) {
+        query = null
+      }
+      const res = await dataSources.micropub.querySource(query)
+      const items = res.items.map(mf2Convert.from)
+      return {
+        items,
+        channel: '_t_micropub-query',
+        after: res.after,
+        before: res.before,
+      }
     },
   },
   Mutation: {
@@ -227,6 +202,14 @@ module.exports = {
     micropubCreate: async (_, { json }, { dataSources }) => {
       const postUrl = await dataSources.micropub.create(JSON.parse(json))
       return postUrl
+    },
+    micropubDelete: async (_, { url }, { dataSources }) => {
+      const postUrl = await dataSources.micropub.delete(url)
+      return !!postUrl
+    },
+    micropubUndelete: async (_, { url }, { dataSources }) => {
+      const postUrl = await dataSources.micropub.undelete(url)
+      return !!postUrl
     },
   },
   Subscription: {

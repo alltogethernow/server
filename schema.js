@@ -54,6 +54,8 @@ const typeDefs = gql`
     name: String
     content: PostContent
     summary: String
+    postStatus: String
+    visibility: String
     category: [String]
     featured: [String]
     photo: [String]
@@ -132,7 +134,13 @@ const typeDefs = gql`
     search(query: String!): [SearchResult]!
     preview(url: String!): [Post]!
     user: User
-    micropubPosts(postType: String): [Post]!
+    micropubPosts(
+      postType: String
+      limit: Int
+      before: String
+      after: String
+      order: String
+    ): TimelineResult!
     micropubQuery(query: String): String
   }
 
@@ -164,6 +172,8 @@ const typeDefs = gql`
       _t_infiniteScroll: Boolean
     ): Channel!
     micropubCreate(json: String!): String!
+    micropubDelete(url: String!): Boolean!
+    micropubUndelete(url: String!): Boolean!
   }
 `
 module.exports = typeDefs
