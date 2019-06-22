@@ -172,6 +172,7 @@ const typeDefs = gql`
       _t_infiniteScroll: Boolean
     ): Channel!
     micropubCreate(json: String!): String!
+    micropubUpdate(url: String!, json: String!): String!
     micropubDelete(url: String!): Boolean!
     micropubUndelete(url: String!): Boolean!
   }

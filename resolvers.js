@@ -203,6 +203,10 @@ module.exports = {
       const postUrl = await dataSources.micropub.create(JSON.parse(json))
       return postUrl
     },
+    micropubUpdate: async (_, { json, url }, { dataSources }) => {
+      const postUrl = await dataSources.micropub.update(url, JSON.parse(json))
+      return postUrl
+    },
     micropubDelete: async (_, { url }, { dataSources }) => {
       const postUrl = await dataSources.micropub.delete(url)
       return !!postUrl
