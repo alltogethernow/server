@@ -32,6 +32,15 @@ const postReducer = post => {
   return post
 }
 
+const feedReducer = feed => {
+  // If the feed doesn't have a name then give it a name based on the url
+  if (!feed.name && feed.url) {
+    const url = new URL(feed.url)
+    feed.name = url.host + (url.pathname !== '/' ? url.pathname : '')
+  }
+  return feed
+}
+
 class MicrosubAPI extends RESTDataSource {
   constructor() {
     super()
@@ -172,7 +181,7 @@ class MicrosubAPI extends RESTDataSource {
 
   async getFollowing(channel) {
     const res = await this.get('', { action: 'follow', channel })
-    const following = res.items
+    const following = res.items.map(feedReducer)
     return following
   }
 
@@ -188,7 +197,7 @@ class MicrosubAPI extends RESTDataSource {
 
   async getMuted(channel) {
     const res = await this.get('', { action: 'mute', channel })
-    const following = res.items
+    const following = res.items.map(feedReducer)
     return following
   }
 
@@ -204,7 +213,7 @@ class MicrosubAPI extends RESTDataSource {
 
   async getBlocked(channel) {
     const res = await this.get('', { action: 'block', channel })
-    const following = res.items
+    const following = res.items.map(feedReducer)
     return following
   }
 
@@ -249,7 +258,7 @@ class MicrosubAPI extends RESTDataSource {
   async search(query) {
     let params = { action: 'search', query }
     const res = await this.post('', params)
-    return res.results
+    return res.results.map(feedReducer)
   }
 
   async preview(url) {

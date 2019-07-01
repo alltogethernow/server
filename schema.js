@@ -21,7 +21,7 @@ const typeDefs = gql`
   type SearchResult {
     type: String!
     url: String!
-    name: String
+    name: String!
     photo: String
     description: String
     author: PostAuthor
