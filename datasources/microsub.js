@@ -58,6 +58,30 @@ class MicrosubAPI extends RESTDataSource {
   }
 
   /**
+   * Fix to prevent adding trailing slashes by default as it breaks certain endpoints.
+   * @param {object} request The request object
+   */
+  resolveURL(request) {
+    let path = request.path
+    if (path.startsWith('/')) {
+      path = path.slice(1)
+    }
+    const baseURL = this.baseURL
+    if (baseURL) {
+      if (!path) {
+        // This is the fix since there is no need to add an extra path
+        return new URL(baseURL)
+      }
+      const normalizedBaseURL = baseURL.endsWith('/')
+        ? baseURL
+        : baseURL.concat('/')
+      return new URL(path, normalizedBaseURL)
+    } else {
+      return new URL(path)
+    }
+  }
+
+  /**
    * Adds the authorization header to microsub requests
    * @param {object} request The request object
    */
@@ -119,6 +143,9 @@ class MicrosubAPI extends RESTDataSource {
       params.before = before
     }
     const res = await this.get('', params)
+    if (!res) {
+      throw new Error(`Channel "${channel}" not found`)
+    }
     const items = res.items.map(postReducer)
 
     return {
