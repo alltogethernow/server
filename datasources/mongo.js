@@ -111,12 +111,14 @@ class UserAPI extends DataSource {
       if (data.token) {
         doc.token = data.token
       }
-      if (data.micropubEndpoint) {
-        doc.micropubEndpoint = data.micropubEndpoint
+      if (data.microsubEndpoint) {
+        doc.microsubEndpoint = data.microsubEndpoint
       }
       if (data.micropubEndpoint) {
         doc.micropubEndpoint = data.micropubEndpoint
       }
+
+      await doc.save()
 
       // Refresh h-card async
       getHCard(user.url)
@@ -133,8 +135,6 @@ class UserAPI extends DataSource {
           doc.save()
         })
         .catch(err => console.error('[Error getting h-card]', err))
-
-      await doc.save()
     }
     return user
   }
