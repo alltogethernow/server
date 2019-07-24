@@ -1,6 +1,7 @@
 const { DataSource } = require('apollo-datasource')
 const mongoose = require('mongoose')
 const jwt = require('../lib/jwt')
+const getHCard = require('../lib/get-simplified-hcard')
 
 if (mongoose.connection.readyState === 0) {
   mongoose
@@ -13,7 +14,9 @@ const Schema = mongoose.Schema
 
 const User = new Schema({
   url: String,
+  name: String,
   photo: String,
+  email: String,
   token: String,
   microsubEndpoint: String,
   micropubEndpoint: String,
@@ -72,19 +75,35 @@ class UserAPI extends DataSource {
       if (!url) {
         throw new Error('JWT not valid')
       }
-      if (!data) {
-        // TODO: May need to create data by getting rels from url, etc...
-        // TODO: Parse user mf2 to get photo and name - may want to do that in the indieauth datasource
+
+      // Get h-card data
+      try {
+        const card = await getHCard(url)
+        if (card.name) {
+          data.name = card.name
+        }
+        if (card.photo) {
+          data.photo = card.photo
+        }
+        if (card.email) {
+          data.email = card.email
+        }
+      } catch (err) {
+        console.error('[Error getting h-card]', err)
       }
+
+      // Add defaults if needed
       user = Object.assign(
-        {},
         {
           photo: '',
           name: '',
+          email: '',
           settings: {},
         },
         data
       )
+
+      // Save to db
       await this.createUser(user)
     } else if (user && data) {
       // Update user data in db
@@ -98,6 +117,23 @@ class UserAPI extends DataSource {
       if (data.micropubEndpoint) {
         doc.micropubEndpoint = data.micropubEndpoint
       }
+
+      // Refresh h-card async
+      getHCard(user.url)
+        .then(card => {
+          if (card.name) {
+            doc.name = card.name
+          }
+          if (card.photo) {
+            doc.photo = card.photo
+          }
+          if (card.email) {
+            doc.email = card.email
+          }
+          doc.save()
+        })
+        .catch(err => console.error('[Error getting h-card]', err))
+
       await doc.save()
     }
     return user
