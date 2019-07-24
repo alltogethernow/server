@@ -86,6 +86,19 @@ class UserAPI extends DataSource {
         data
       )
       await this.createUser(user)
+    } else if (user && data) {
+      // Update user data in db
+      const doc = await this.User.findOne({ url: user.url })
+      if (data.token) {
+        doc.token = data.token
+      }
+      if (data.micropubEndpoint) {
+        doc.micropubEndpoint = data.micropubEndpoint
+      }
+      if (data.micropubEndpoint) {
+        doc.micropubEndpoint = data.micropubEndpoint
+      }
+      await doc.save()
     }
     return user
   }
