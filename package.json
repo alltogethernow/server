@@ -1,6 +1,6 @@
 {
   "name": "@together/server",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A graphql server combining microsub and micropub functionality for Together",
   "main": "index.js",
   "directories": {
@@ -28,18 +28,18 @@
   "homepage": "https://github.com/alltogethernow/server#readme",
   "dependencies": {
     "@postlight/mercury-parser": "^2.1.1",
-    "apollo-datasource": "^0.6.0",
-    "apollo-datasource-rest": "^0.6.0",
-    "apollo-server": "^2.7.0",
+    "apollo-datasource": "^0.6.2",
+    "apollo-datasource-rest": "^0.6.2",
+    "apollo-server": "^2.9.1",
     "axios": "^0.19.0",
-    "dotenv": "^8.0.0",
-    "graphql": "^14.4.2",
+    "dotenv": "^8.1.0",
+    "graphql": "^14.5.4",
     "indieauth-helper": "github:grantcodes/indieauth-helper",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "microformat-node": "^2.0.1",
     "micropub-helper": "^1.6.1",
-    "mongoose": "^5.6.6"
+    "mongoose": "^5.6.11"
   },
   "prettier": {
     "singleQuote": true,
