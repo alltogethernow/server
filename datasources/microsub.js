@@ -96,6 +96,7 @@ class MicrosubAPI extends RESTDataSource {
     let layout = 'timeline'
     let autoRead = true
     let infiniteScroll = true
+    let unreadOnly = false
     if (
       this.context.user &&
       this.context.user.settings &&
@@ -113,6 +114,9 @@ class MicrosubAPI extends RESTDataSource {
       if (channelSettings.infiniteScroll === false) {
         infiniteScroll = channelSettings.infiniteScroll
       }
+      if (channelSettings.unreadOnly === true) {
+        unreadOnly = true
+      }
       if (channel.unread === false) {
         channel.unread = 0
       } else if (channel.unread === true) {
@@ -127,6 +131,7 @@ class MicrosubAPI extends RESTDataSource {
       _t_layout: layout,
       _t_autoRead: autoRead,
       _t_infiniteScroll: infiniteScroll,
+      _t_unreadOnly: unreadOnly,
     }
     return data
   }
@@ -137,6 +142,7 @@ class MicrosubAPI extends RESTDataSource {
     after = null,
     before = null,
     source = null,
+    unreadOnly = false,
   }) {
     let params = { action: 'timeline', channel }
     if (limit !== null) {
@@ -150,6 +156,9 @@ class MicrosubAPI extends RESTDataSource {
     }
     if (source !== null) {
       params.source = source
+    }
+    if (unreadOnly === true) {
+      params.is_read = false
     }
     const res = await this.get('', params)
     if (!res) {

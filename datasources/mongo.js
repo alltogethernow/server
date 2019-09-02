@@ -149,7 +149,7 @@ class UserAPI extends DataSource {
       return true
     }
 
-    const validKeys = ['layout', 'autoRead', 'infiniteScroll']
+    const validKeys = ['layout', 'autoRead', 'infiniteScroll', 'unreadOnly']
     if (!validKeys.includes(key)) {
       throw new Error(`${key} is not a valid channel option`)
     }

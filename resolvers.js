@@ -51,7 +51,7 @@ module.exports = {
     },
     timeline: async (
       _,
-      { channel, limit, before, after, source },
+      { channel, limit, before, after, source, unreadOnly },
       { dataSources }
     ) =>
       await dataSources.microsub.getTimeline({
@@ -60,6 +60,7 @@ module.exports = {
         before,
         after,
         source,
+        unreadOnly,
       }),
     micropubQuery: async (_, { query }, { dataSources }) => {
       const res = await dataSources.micropub.query(query)
@@ -228,14 +229,24 @@ module.exports = {
   },
   Subscription: {
     timelineSubscription: {
-      resolve: async (payload, { channel, before }, context, _info) => {
+      resolve: async (
+        payload,
+        { channel, before, source, unreadOnly },
+        context,
+        _info
+      ) => {
         if (!channel || !before) {
           return { channel, items: [] }
         }
         const Microsub = require('./datasources/microsub')
         const microsub = new Microsub()
         microsub.initialize({ context })
-        const timeline = await microsub.getTimeline({ channel, before })
+        const timeline = await microsub.getTimeline({
+          channel,
+          before,
+          source,
+          unreadOnly,
+        })
         return timeline
         console.log(timeline)
         return { channel, before: timeline.before, items: timeline.items }

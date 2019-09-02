@@ -93,6 +93,7 @@ const typeDefs = gql`
     _t_layout: String!
     _t_autoRead: Boolean!
     _t_infiniteScroll: Boolean!
+    _t_unreadOnly: Boolean!
   }
 
   type UserSettings {
@@ -123,6 +124,7 @@ const typeDefs = gql`
       before: String
       after: String
       source: String
+      unreadOnly: Boolean
     ): TimelineResult!
   }
 
@@ -138,6 +140,7 @@ const typeDefs = gql`
       before: String
       after: String
       source: String
+      unreadOnly: Boolean
     ): TimelineResult!
     search(query: String!): [SearchResult]!
     preview(url: String!): [Post]!
@@ -148,7 +151,6 @@ const typeDefs = gql`
       before: String
       after: String
       order: String
-      source: String
     ): TimelineResult!
     micropubQuery(query: String): String
   }
@@ -179,6 +181,7 @@ const typeDefs = gql`
       _t_layout: String
       _t_autoRead: Boolean
       _t_infiniteScroll: Boolean
+      _t_unreadOnly: Boolean
     ): Channel!
     micropubCreate(json: String!): String!
     micropubUpdate(url: String!, json: String!): String!
