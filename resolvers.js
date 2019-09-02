@@ -49,8 +49,18 @@ module.exports = {
     muted: async (_, { channel }, { dataSources }) => {
       return await dataSources.microsub.getMuted(channel)
     },
-    timeline: async (_, { channel, limit, before, after }, { dataSources }) =>
-      await dataSources.microsub.getTimeline({ channel, limit, before, after }),
+    timeline: async (
+      _,
+      { channel, limit, before, after, source },
+      { dataSources }
+    ) =>
+      await dataSources.microsub.getTimeline({
+        channel,
+        limit,
+        before,
+        after,
+        source,
+      }),
     micropubQuery: async (_, { query }, { dataSources }) => {
       const res = await dataSources.micropub.query(query)
       return JSON.stringify(res)

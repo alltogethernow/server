@@ -131,7 +131,13 @@ class MicrosubAPI extends RESTDataSource {
     return data
   }
 
-  async getTimeline({ channel, limit = 20, after = null, before = null }) {
+  async getTimeline({
+    channel,
+    limit = 20,
+    after = null,
+    before = null,
+    source = null,
+  }) {
     let params = { action: 'timeline', channel }
     if (limit !== null) {
       params.limit = limit
@@ -142,15 +148,22 @@ class MicrosubAPI extends RESTDataSource {
     if (before !== null) {
       params.before = before
     }
+    if (source !== null) {
+      params.source = source
+    }
     const res = await this.get('', params)
     if (!res) {
       throw new Error(`Channel "${channel}" not found`)
     }
     const items = res.items.map(postReducer)
+    if (source && res.source) {
+      res.source._id = source
+    }
 
     return {
-      channel,
       items,
+      channel,
+      source: res.source,
       ...res.paging,
     }
   }

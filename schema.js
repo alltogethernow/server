@@ -11,6 +11,7 @@ const typeDefs = gql`
     items: [Post]!
     after: String
     before: String
+    source: Source
   }
 
   type PostContent {
@@ -25,6 +26,11 @@ const typeDefs = gql`
     photo: String
     description: String
     author: PostAuthor
+  }
+
+  type Source {
+    _id: ID!
+    name: String!
   }
 
   type PostAuthor {
@@ -116,6 +122,7 @@ const typeDefs = gql`
       limit: Int
       before: String
       after: String
+      source: String
     ): TimelineResult!
   }
 
@@ -130,6 +137,7 @@ const typeDefs = gql`
       limit: Int
       before: String
       after: String
+      source: String
     ): TimelineResult!
     search(query: String!): [SearchResult]!
     preview(url: String!): [Post]!
@@ -140,6 +148,7 @@ const typeDefs = gql`
       before: String
       after: String
       order: String
+      source: String
     ): TimelineResult!
     micropubQuery(query: String): String
   }
