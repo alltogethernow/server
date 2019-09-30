@@ -12,9 +12,30 @@ const postReducer = post => {
     }
   }
 
+  // Shouldn't need to do this but some servers send bad data sometimes.
   // Fix non array quotation-of https://github.com/aaronpk/Aperture/issues/57
-  if (post.quotationOf && !Array.isArray(post.quotationOf)) {
-    post.quotationOf = [post.quotationOf]
+  const forceArrays = [
+    'category',
+    'featured',
+    'photo',
+    'video',
+    'audio',
+    'likeOf',
+    'repostOf',
+    'inReplyTo',
+    'bookmarkOf',
+    'quotationOf',
+    'syndication',
+  ]
+  for (const key of forceArrays) {
+    if (post[key] && !Array.isArray(post[key])) {
+      post[key] = [post[key]]
+      console.warn(
+        '[Malformed data from server]',
+        `${key} should be an array`,
+        post
+      )
+    }
   }
 
   // Apply the same thing to refs too

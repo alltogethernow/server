@@ -1,6 +1,6 @@
 {
   "name": "@together/server",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A graphql server combining microsub and micropub functionality for Together",
   "main": "index.js",
   "directories": {
