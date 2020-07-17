@@ -36,7 +36,7 @@
     "graphql": "^14.5.4",
     "indieauth-helper": "github:grantcodes/indieauth-helper",
     "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "microformat-node": "^2.0.1",
     "micropub-helper": "^1.6.1",
     "mongoose": "^5.7.5"
