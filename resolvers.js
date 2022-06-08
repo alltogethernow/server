@@ -1,5 +1,5 @@
 const jwt = require('./lib/jwt')
-const { PubSub, withFilter } = require('apollo-server')
+const { PubSub } = require('graphql-subscriptions')
 const mf2Convert = require('./lib/mf2-converter')
 const pubsub = new PubSub()
 

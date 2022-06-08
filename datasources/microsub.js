@@ -2,7 +2,7 @@ const { AuthenticationError } = require('apollo-server')
 const { RESTDataSource } = require('apollo-datasource-rest')
 const { camelCase } = require('lodash')
 
-const postReducer = post => {
+const postReducer = (post) => {
   // Convert keys with dashes to camel case
   for (const key in post) {
     if (key.includes('-')) {
@@ -53,7 +53,7 @@ const postReducer = post => {
   return post
 }
 
-const feedReducer = feed => {
+const feedReducer = (feed) => {
   // If the feed doesn't have a name then give it a name based on the url
   if (!feed.name && feed.url) {
     const url = new URL(feed.url)
@@ -72,10 +72,7 @@ class MicrosubAPI extends RESTDataSource {
    * Get the microsub base url from the current user
    */
   get baseURL() {
-    if (this.context.user && this.context.user.microsubEndpoint) {
-      return this.context.user.microsubEndpoint
-    }
-    return null
+    return this?.context?.user?.microsubEndpoint
   }
 
   /**

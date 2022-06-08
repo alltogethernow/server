@@ -1,6 +1,12 @@
 require('dotenv').config()
-const { ApolloServer } = require('apollo-server')
-const schema = require('./schema')
+const express = require('express')
+const { ApolloServer } = require('apollo-server-express')
+const { createServer } = require('http')
+const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core')
+const { makeExecutableSchema } = require('@graphql-tools/schema')
+const { WebSocketServer } = require('ws')
+const { useServer } = require('graphql-ws/lib/use/ws')
+const typeDefs = require('./schema')
 const resolvers = require('./resolvers')
 const MicrosubAPI = require('./datasources/microsub')
 const MicropubAPI = require('./datasources/micropub')
@@ -32,13 +38,27 @@ const context = async ({ req, connection }) => {
   }
 }
 
+const app = express()
+const httpServer = createServer(app)
+
+// Create our WebSocket server using the HTTP server we just set up.
+const wsServer = new WebSocketServer({
+  server: httpServer,
+  path: '/graphql',
+})
+const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+// Save the returned server's info so we can shutdown this server later
+const serverCleanup = useServer({ schema }, wsServer)
+
 const server = new ApolloServer({
-  typeDefs: schema,
+  schema,
   dataSources,
-  resolvers,
+  // resolvers,
   context,
+  csrfPrevention: true,
   cors: {
-    origin: process.env.URL,
+    origin: [process.env.URL],
   },
   resolverValidationOptions: {
     requireResolversForResolveType: false,
@@ -58,9 +78,33 @@ const server = new ApolloServer({
     //   console.log('Socket disconnect')
     // },
   },
+  plugins: [
+    // Proper shutdown for the HTTP server.
+    ApolloServerPluginDrainHttpServer({ httpServer }),
+
+    // Proper shutdown for the WebSocket server.
+    {
+      async serverWillStart() {
+        return {
+          async drainServer() {
+            await serverCleanup.dispose()
+          },
+        }
+      },
+    },
+  ],
 })
 
-server.listen(process.env.PORT || 4000).then(({ url, subscriptionsUrl }) => {
-  console.log(`🚀 Server ready at ${url}`)
-  console.log(`🚀 Subscriptions ready at ${subscriptionsUrl}`)
+const port = process.env.PORT || 4000
+
+server.start(port).then(() => {
+  console.log(`🚀 Server started`)
+  server.applyMiddleware({ app })
+})
+
+// Now that our HTTP server is fully set up, we can listen to it.
+httpServer.listen(port, () => {
+  console.log(
+    `🚀 Http Server ready at http://localhost:${port}${server.graphqlPath}`
+  )
 })
