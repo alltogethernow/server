@@ -10,7 +10,7 @@ To run this server you first need a MongoDB server running to persist user data.
 Then create a `.env` file (or environment variables) with the following variables set:
 
 ```
-URL=http://localhost:300
+URL=http://localhost:3000/
 MONGO=http://mongodb.url
 AUTH_SECRET=authsecret
 JWT_SECRET=supersecretjwtsecret
