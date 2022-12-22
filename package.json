@@ -35,7 +35,7 @@
     "dotenv": "^8.1.0",
     "graphql": "^14.5.4",
     "indieauth-helper": "github:grantcodes/indieauth-helper",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
     "microformat-node": "^2.0.1",
     "micropub-helper": "^1.6.1",
