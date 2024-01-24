@@ -39,7 +39,7 @@
     "lodash": "^4.17.21",
     "microformat-node": "^2.0.1",
     "micropub-helper": "^1.6.1",
-    "mongoose": "^5.7.5"
+    "mongoose": "^5.13.15"
   },
   "prettier": {
     "singleQuote": true,
